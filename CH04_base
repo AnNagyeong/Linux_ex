@@ -59,7 +59,7 @@ Time Zone: UTC (UTC, +0000)
 NTP enabled : 시간 동기화 여부
 서버 관리 시 UTC 또는 로컬 타임존이 어떻게 설정되어 있는지 확인하는 습관 필요!
 
-[timedatectl 실행 결과](images/ch04-ex01.png)
+[timedatectl 실행 결과](images/CH04_base-ex01.png)
 
 
 
