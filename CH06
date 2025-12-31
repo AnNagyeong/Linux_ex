@@ -1,0 +1,59 @@
+#Linux_ex 웹서버 404 에러 로그만 확인
+
+sudo dnf install -y nginx
+
+sudo service nginx start
+: service는 systemctl start ngnix과 동일한 기능을 하지만 service는 오래된 시스템에서도 호환
+
+curl http://localhost
+
+sudo cat /var/log/nginx/access.log
+: cat - 파일 내용 전체 출력
+: /var/log/nginx/access.log - 엔진 접속 로그 파일 경로
+(로그에는 누가, 언제, 어떤 페이지에 접속했는지 등이 포함)
+-> 이건 정상 로그
+
+
+curl http://localhost/test
+일부러 존재하지 않는 페이지에 접속함. 404 Not Found 상태 코드를 경로에 남
+
+curl http://localhost/test1
+curl http://localhost/test2
+로그 필터링을 테스트하기 위해 여러 종류의 로그를 만듦
+
+sudo cat /var/log/nginx/access.log
+: cat으로 지금까지 시간대로 쌓인 정상 로그와 에러 로그를 볼 수 있 
+
+sudo grep ' 404 ' /var/log/nginx/access.log | awk '{print $7}'
+: gerp ' 404 ' - 로그 라인 중 "404" 문자열이 포함된 라인만 필터링
+|(파이프) - grep의 결과를 awk의 입력으로 전달함
+: awk '{print &7}' - 각 라인을 공백으로 나누어 7번째 필드(URL)만 출력
+
+
+: quit
+-------------------------------------------------------------------------
+
+엔진 access.log에는 보통 이런 로그가 있음.
+127.0.0.1 - - [30/Dec/2025:21:10:22 +0900] "GET /test HTTP/1.1" 404 153 "-" "curl/8.0" (한 번의 접속 기록)
+
+공백(띄어쓰기) 기준으로 잘린 조각 하나하나를 필드라고 부름.
+
+awk는 기본적으로 한 줄을 공백으로 쪼갠다
+
+| 필드 번호  | 내용               |
+| ------ | --------------------- |
+| $1     | 127.0.0.1             |
+| $2     | -                     |
+| $3     | -                     |
+| $4     | [30/Dec/2025:21:10:22 |
+| $5     | +0900]                |
+| $6     | "GET                  |
+| $7     | /test                 | 
+| $8     | HTTP/1.1"             |
+| $9     | **404**               |
+| $10    | 153                   |
+| ...    | ...                   |
+
+✔ grep = 줄 필터링
+✔ awk = 필드(열) 단위 처리
+
