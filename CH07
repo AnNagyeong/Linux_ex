@@ -1,0 +1,49 @@
+# Linux_ex 포트 충돌?
+
+sudo dnf install -y nginx
+
+sudo systemctl start nginx
+- 이 명령으로 엔진이 80번 포트를 사용할 수 있게 된다
+(systemctl status nginx 으로 실행 상태 확인)
+
+sudo dnf install -y net-tools
+: net-tools 는 netstat, ifconfig 등 기본적인 네트워크 관리 도구 포함
+최신 시스템에서는 ss 명령어가 netstat을 대체하지만,
+netstat은 여전히 널리 사용
+
+sudo netstat -tplan | grep 80
+: sudo 는 모든 네트워크 정보를 보기 위해 관리자 권한 사용
+: netstat -tplan - TCP 포트(-t), 리스닝 상태(-l), 프로그램 이름(-p),
+숫자 주소(-n) 표시
+: | gerp 80 - 출력 결과에서 80이 포함된 줄만 필터링함
+
+sudo dnf install -y httpd
+: Apache 웹서버를 설치해 포트를 충돌시킴.
+httpd - Apache HTTP Server의 패키지 이름..
+엔진, 아파치는 가장 널리 쓰이는 웹서버
+
+sudo systemctl start httpd (오류 발생해야 정상)
+이미 엔진이 80번 포트를 사용 중인 상태에서 httpd를 시작하려고 시도
+여기서 포트 충돌이 발생
+
+sudo systemctl status httpd
+: httpd의 현재 상태와 로그를 보여줌, 여기서 원인 확인 가능
+
+sudo netstat -tplan | grep 80
+: 원인을 명확하게 파악
+
+sudo systemctl stop nginx
+: 포트 충돌의 원인인 엔진을 해제함
+
+sudo systemctl start httpd
+: 이제 80번 포트가 비어있음, 다시 아파치 시작
+
+sudo systemctl status httpd
+: httpd 서비스가 정상적으로 실행되었는지 상태 확인
+
+sudo netstat -tplan | grep 80
+: 이후 엔진 대신 httpd가 80번 포트를 점유하고 있는 걸 볼 수 있음,
+포트 충돌 해결
+
+: quit
+
