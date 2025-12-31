@@ -61,6 +61,15 @@ NTP enabled : 시간 동기화 여부
 
 ![ex01](images/ex01.png)
 
+--------------------------------------------------------------------------------------
+UTC에서 아시아로 변경하는 방법
+ 
+1. date 로 현재 날짜와 시간 확인  
+2. timedatectl 로 현재 타임존과 시간 확인  
+3. sudo timedatectl set-timezone Asia/Seoul 로 UTC에서 변경  
+4. date 로 변경된 시간과 날짜 확인  
+5. timedatectl 로 변경된 타임존과 시간 확인  
+
 
 
 
