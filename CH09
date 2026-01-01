@@ -1,0 +1,23 @@
+# Linux_ex 프로세스의 우선순위를 바꾸는 방법?
+
+nice -n 19 sleep 300 &
+: nice -n 19 - 프로세스의 nice 값을 19로 설정하여 실행.
+숫자가 높을수록 우선순위는 낮아진다
+(nice 값은 -20(가장 높음)부터 19(가장 낮음)까지 설정 가능하다.
+당연한 이야기지만, CPU 자원이 부족할 때 우선순위가 낮은 프로세스는 다른
+중요한 프로세스에 자원을 양보하게 됨)
+
+ps -eo pid,ni,cmd --sort=-ni | head
+: 프로세스 ID, Nice 값(ni), 명령어(cmd)를 지정하여 출력하고
+Nice 값을 기준으로 내림차순 한다.(숫자가 큰 값이 위로)
+: | head - 상위 10개 결과만 표시
+
+sudo renice -n 14 -p $(pgrep sleep)
+: renice -n 14 - Nice 값을 14로 변경
+: -p $(pgrep sleep) - pgrep으로 찾은 sleep 프로세스의 PID 대상으로 지정
+
+ps -eo pid,ni,cmd --sort=-ni | head
+: ps 명령어를 다시 실행하여 sleep 프로세스의 Nice 값이 14로 변경되었는지 확인.
+출력된 목록에서 sleep 프로세스의 NI 컬럼값이 19에서 14로 바뀐 것을 볼 수 있다.
+
+: quit
