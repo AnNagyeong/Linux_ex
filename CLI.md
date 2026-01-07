@@ -3,7 +3,7 @@
 
 # 기본 명령어  
 
-man - manual / 명령어에 대한 사용 매뉴얼  
+[ man ] - manual / 명령어에 대한 사용 매뉴얼  
 ls - list / 파일이나 디렉터리의 목록을 확인  
 cat - concatenate / 파일 안에 담겨 있는 내용을 화면에 출력  
 pwd - printing working directory / 현재 작업 중인 디렉터리 정보를 출력  
